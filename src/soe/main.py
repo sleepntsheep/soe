@@ -34,14 +34,15 @@ class Editor:
             with open(self.file_name, 'r') as file:
                 self.text = file.read().splitlines()
         else:
-            with open(self.file_name, 'w') as file:
-                self.text = ''
+            self.text = []
 
     def main(self):
         while self.RUN:
             self.win.clear()
             self.status_win.clear()
             self.status_win.bkgd(' ', curses.color_pair(1))
+            
+            self.std_height, self.std_width = self.stdscr.getmaxyx()
 
             self.total_x = self.screen_x + self.offscreen_x
             self.total_y = self.screen_y + self.offscreen_y
@@ -73,18 +74,18 @@ class Editor:
                 self.up()
             elif key == curses.KEY_DOWN:
                 self.down()
-            # elif key == 545: #ctrl left
-            #     for i in range(0, 8):
-            #         self.left()
-            # elif key == 560: #ctrl right
-            #     for i in range(0, 8):
-            #         self.right()
-            # elif key == 566: #ctrl up
-            #     for i in range(0, 8):
-            #         self.up()
-            # elif key == 525: #ctrl down
-            #     for i in range(0, 8):
-            #         self.down()
+            elif key == 545: #ctrl left
+                for i in range(0, 8):
+                    self.left()
+            elif key == 560: #ctrl right
+                for i in range(0, 8):
+                    self.right()
+            elif key == 566: #ctrl up
+                for i in range(0, 8):
+                    self.up()
+            elif key == 525: #ctrl down
+                for i in range(0, 8):
+                    self.down()
             elif key == 330:
                 self.delete()
             elif key == curses.KEY_BACKSPACE or key == 127:  
@@ -124,8 +125,10 @@ class Editor:
             self.text[self.total_y] = self.text[self.total_y][:self.total_x] + self.text[self.total_y][self.total_x + 1:]
 
     def addch(self, ch):
-        if len(self.text[self.total_y]) < 1:
-            self.text[self.total_y] = ch
+        if len(self.text) == 0:
+            self.text.append(ch)
+#        elif len(self.text[self.total_y]) < 1:
+#           self.text[self.total_y] = ch
         self.text[self.total_y] = self.text[self.total_y][:self.total_x] + ch + self.text[self.total_y][self.total_x:]
         self.right()
 
@@ -172,7 +175,7 @@ class Editor:
             self.offscreen_y -= 1
     
     def down(self):
-        if self.total_y == len(self.text) - 1:
+        if self.total_y == max(len(self.text) - 1, 0):
             return
         if self.screen_y < self.height - 1:
             if self.screen_x >= len(self.text[self.total_y + 1]):
@@ -198,5 +201,8 @@ def c_main(win: curses.window):
     editor = Editor(win, file_name)
     editor.main()
 
-if __name__ == '__main__':
+def main():
     exit(curses.wrapper(c_main))
+
+if __name__ == '__main__':
+    main()

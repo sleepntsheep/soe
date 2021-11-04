@@ -1,2 +1,5 @@
 .vscode
-
+.gitignore
+output
+soe_*
+*egg-info
