@@ -2,6 +2,7 @@ import curses
 import os
 import re
 import sys
+from contextlib import suppress
 
 class Editor:
     def __init__(self, stdscr, file_name):
@@ -125,6 +126,8 @@ class Editor:
             self.text[self.total_y] = self.text[self.total_y][:self.total_x] + self.text[self.total_y][self.total_x + 1:]
 
     def addch(self, ch):
+        if chr(0) == ch: 
+            return
         if len(self.text) == 0:
             self.text.append(ch)
 #        elif len(self.text[self.total_y]) < 1:
@@ -185,12 +188,7 @@ class Editor:
             self.offscreen_y += 1
 
     def save_file(self):
-        if sys.platform == 'win32':
-            newline = '\r\n'
-        elif sys.platform == 'linux':
-            newline = '\n'
-        else:
-            newline = '\n'
+        newline = '\n'
         with open(self.file_name, 'w') as f:
             for line in self.text:
                 f.write(line + newline)
