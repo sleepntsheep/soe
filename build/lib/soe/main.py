@@ -52,7 +52,7 @@ class Editor:
                     break
                 self.win.insstr(index, 0, line[self.offscreen_x:self.width-1])
 
-            self.win.move(self.screen_y, self.screen_x)
+            self.stdscr.move(self.screen_y, self.screen_x)
 
             status = f"{self.total_x}, {self.total_y}"
             
@@ -64,7 +64,7 @@ class Editor:
             key = self.stdscr.getch()
             self.status = str(key)
 
-            if key == 17: # ctrl q
+            if key == 17 or key == 27: # ctrl q or esc
                 self.RUN = False
             elif key == curses.KEY_LEFT:
                 self.left()
@@ -88,7 +88,7 @@ class Editor:
                     self.down()
             elif key == 330:
                 self.delete()
-            elif key == curses.KEY_BACKSPACE or key == 127:  
+            elif key == curses.KEY_BACKSPACE or key == 127 or key == 8:  
                 self.back()
             elif key == 6:
                 self.search()
