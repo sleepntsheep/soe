@@ -75,18 +75,6 @@ class Editor:
                 self.up()
             elif key == curses.KEY_DOWN:
                 self.down()
-            elif key == 545: #ctrl left
-                for i in range(0, 8):
-                    self.left()
-            elif key == 560: #ctrl right
-                for i in range(0, 8):
-                    self.right()
-            elif key == 566: #ctrl up
-                for i in range(0, 8):
-                    self.up()
-            elif key == 525: #ctrl down
-                for i in range(0, 8):
-                    self.down()
             elif key == 330:
                 self.delete()
             elif key == curses.KEY_BACKSPACE or key == 127 or key == 8:  
@@ -130,8 +118,6 @@ class Editor:
             return
         if len(self.text) == 0:
             self.text.append(ch)
-#        elif len(self.text[self.total_y]) < 1:
-#           self.text[self.total_y] = ch
         self.text[self.total_y] = self.text[self.total_y][:self.total_x] + ch + self.text[self.total_y][self.total_x:]
         self.right()
 
