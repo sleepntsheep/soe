@@ -14,7 +14,7 @@ class Editor:
         self.screen_x = 0
         self.screen_y = 0
         self.offscreen_x = 0
-        self.offscreen_y = 0 
+        self.offscreen_y = 0
         self.total_x = self.screen_x + self.offscreen_x
         self.total_y = self.screen_y + self.offscreen_y
         self.RUN = True
@@ -29,7 +29,7 @@ class Editor:
 
     def get_input(self):
         ...
-        
+
     def load_file(self):
         if os.path.exists(self.file_name):
             with open(self.file_name, 'r', encoding='utf8') as file:
@@ -42,12 +42,12 @@ class Editor:
             self.win.clear()
             self.status_win.clear()
             self.status_win.bkgd(' ', curses.color_pair(1))
-            
+
             self.std_height, self.std_width = self.stdscr.getmaxyx()
 
             self.total_x = self.screen_x + self.offscreen_x
             self.total_y = self.screen_y + self.offscreen_y
-            
+
             for index, line in enumerate(self.text[self.offscreen_y:]):
                 if index >= self.height:
                     break
@@ -56,7 +56,7 @@ class Editor:
             self.stdscr.move(self.screen_y, self.screen_x)
 
             status = f"{self.total_x}, {self.total_y}"
-            
+
             self.status_win.addstr(0, 0, status + '  ' + self.status)
 
             self.status_win.refresh()
@@ -77,7 +77,7 @@ class Editor:
                 self.down()
             elif key == 330:
                 self.delete()
-            elif key == curses.KEY_BACKSPACE or key == 127 or key == 8:  
+            elif key == curses.KEY_BACKSPACE or key == 127 or key == 8:
                 self.back()
             elif key == 6:
                 self.search()
@@ -114,7 +114,7 @@ class Editor:
             self.text[self.total_y] = self.text[self.total_y][:self.total_x] + self.text[self.total_y][self.total_x + 1:]
 
     def addch(self, ch):
-        if chr(0) == ch: 
+        if chr(0) == ch:
             return
         if len(self.text) == 0:
             self.text.append(ch)
@@ -152,7 +152,7 @@ class Editor:
             self.offscreen_x += 1
         elif self.screen_x < self.width - 1:
             self.screen_x += 1
-    
+
     def up(self):
         if self.total_y == 0:
             return
@@ -162,7 +162,7 @@ class Editor:
             self.screen_y -= 1
         else:
             self.offscreen_y -= 1
-    
+
     def down(self):
         if self.total_y == max(len(self.text) - 1, 0):
             return
