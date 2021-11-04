@@ -7,7 +7,7 @@ class Editor:
     def __init__(self, stdscr, file_name):
         curses.noecho()
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_YELLOW)
-        stdscr.Keypad(True)
+        stdscr.keypad(True)
         stdscr.nodelay(False)
 
         self.screen_x = 0
