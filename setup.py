@@ -21,3 +21,4 @@ setuptools.setup(
 		],
 	}
 )
+

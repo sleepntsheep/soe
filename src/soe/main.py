@@ -32,7 +32,7 @@ class Editor:
         
     def load_file(self):
         if os.path.exists(self.file_name):
-            with open(self.file_name, 'r') as file:
+            with open(self.file_name, 'r', encoding='utf8') as file:
                 self.text = file.read().splitlines()
         else:
             self.text = []
@@ -175,7 +175,7 @@ class Editor:
 
     def save_file(self):
         newline = '\n'
-        with open(self.file_name, 'w') as f:
+        with open(self.file_name, 'w', encoding='utf8') as f:
             for line in self.text:
                 f.write(line + newline)
             self.status = f'Saved as {self.file_name}'
@@ -190,3 +190,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
