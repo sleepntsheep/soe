@@ -1,11 +1,15 @@
 import curses
 import os
-from posixpath import join
 import re
 import sys
 
 class Editor:
     def __init__(self, stdscr, file_name):
+        curses.noecho()
+        curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_YELLOW)
+        stdscr.Keypad(True)
+        stdscr.nodelay(False)
+
         self.screen_x = 0
         self.screen_y = 0
         self.offscreen_x = 0
@@ -13,14 +17,17 @@ class Editor:
         self.total_x = self.screen_x + self.offscreen_x
         self.total_y = self.screen_y + self.offscreen_y
         self.RUN = True
-        self.win = stdscr
+        self.stdscr = stdscr
+        self.std_height, self.std_width = stdscr.getmaxyx()
+        self.win = stdscr.subwin(self.std_height - 1, self.std_width - 1, 0, 0)
         self.height, self.width = self.win.getmaxyx()
-        self.status_win = stdscr.subwin(1, self.width - 1, self.height - 1, 0)
+        self.status_win = stdscr.subwin(1, self.std_width - 1, self.std_height - 1, 0)
         self.status = ''
         self.file_name = file_name
         self.load_file()
 
-        curses.noecho()
+    def get_input(self):
+        ...
         
     def load_file(self):
         if os.path.exists(self.file_name):
@@ -33,6 +40,8 @@ class Editor:
     def main(self):
         while self.RUN:
             self.win.clear()
+            self.status_win.clear()
+            self.status_win.bkgd(' ', curses.color_pair(1))
 
             self.total_x = self.screen_x + self.offscreen_x
             self.total_y = self.screen_y + self.offscreen_y
@@ -46,13 +55,13 @@ class Editor:
 
             status = f"{self.total_x}, {self.total_y}"
             
-            self.status_win.clear()
-            self.status_win.addstr(0, 0, status + '  ' + self.status, curses.A_REVERSE)
+            self.status_win.addstr(0, 0, status + '  ' + self.status)
 
             self.status_win.refresh()
             self.win.refresh()
 
-            key = self.win.getch()
+            key = self.stdscr.getch()
+            self.status = str(key)
 
             if key == 17: # ctrl q
                 self.RUN = False
@@ -64,6 +73,18 @@ class Editor:
                 self.up()
             elif key == curses.KEY_DOWN:
                 self.down()
+            # elif key == 545: #ctrl left
+            #     for i in range(0, 8):
+            #         self.left()
+            # elif key == 560: #ctrl right
+            #     for i in range(0, 8):
+            #         self.right()
+            # elif key == 566: #ctrl up
+            #     for i in range(0, 8):
+            #         self.up()
+            # elif key == 525: #ctrl down
+            #     for i in range(0, 8):
+            #         self.down()
             elif key == curses.KEY_BACKSPACE or key == 127:  
                 self.delch()
             elif key == 6:
@@ -105,13 +126,12 @@ class Editor:
             self.text[self.total_y] = self.text[self.total_y][:self.total_x - 1] + self.text[self.total_y][self.total_x:]
         self.left()
 
-
     def left(self):
         if self.screen_x == 0:
             if self.total_y == 0:
                 return
-            self.screen_y -= 1
-            self.screen_x = len(self.text[self.total_y - 1]) - 1
+            self.up()
+            self.screen_x = len(self.text[self.total_y - 1])
         else:
             self.screen_x -= 1
 
@@ -161,23 +181,9 @@ class Editor:
             self.status = f'Saved as {self.file_name}'
 
 def c_main(win: curses.window):
-    file_name = sys.argv[1] if len(sys.argv) > 1 else None
+    file_name = sys.argv[1] if len(sys.argv) > 1 else 'output'
     editor = Editor(win, file_name)
     editor.main()
 
-    if len(sys.argv) > 1:
-        file_name = sys.argv[1]
-    else: 
-        file_name = 'output'
-    if os.path.exists(file_name):
-        with open(file_name, 'r') as file:
-            text = file.readlines()
-    else:
-        with open(file_name, 'w') as file:
-            text = ''
-
-def main():
-    curses.wrapper(c_main)
-
 if __name__ == '__main__':
-    exit(main())
+    exit(curses.wrapper(c_main))

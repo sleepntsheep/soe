@@ -1,19 +1,8 @@
-# soe
-d
-as
-da
-sda
-
-as
-dfa
-
-sdf
+# soe : sheep's own editor
+(WIP)
 
 
 
 
 
-asdfas
-df
-asdf
-lmao
+
