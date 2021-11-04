@@ -85,8 +85,10 @@ class Editor:
             # elif key == 525: #ctrl down
             #     for i in range(0, 8):
             #         self.down()
+            elif key == 330:
+                self.delete()
             elif key == curses.KEY_BACKSPACE or key == 127:  
-                self.delch()
+                self.back()
             elif key == 6:
                 self.search()
             elif key == 19:
@@ -112,14 +114,25 @@ class Editor:
     def undo(self):
         ...
 
+    def delete(self):
+        if self.total_x == len(self.text[self.total_y]):
+            if self.total_y == len(self.text) - 1:
+                return
+            self.text[self.total_y] += self.text[self.total_y + 1]
+            self.text.pop(self.total_y + 1)
+        else:
+            self.text[self.total_y] = self.text[self.total_y][:self.total_x] + self.text[self.total_y][self.total_x + 1:]
+
     def addch(self, ch):
         if len(self.text[self.total_y]) < 1:
             self.text[self.total_y] = ch
         self.text[self.total_y] = self.text[self.total_y][:self.total_x] + ch + self.text[self.total_y][self.total_x:]
         self.right()
 
-    def delch(self):
+    def back(self):
         if self.total_x == 0:
+            if self.total_y == 0:
+                return
             self.text[self.total_y - 1] += self.text[self.total_y]
             self.text.pop(self.total_y)
         else:
