@@ -51,7 +51,7 @@ class Editor:
             for index, line in enumerate(self.text[self.offscreen_y:]):
                 if index >= self.height:
                     break
-                self.win.insstr(index, 0, line[self.offscreen_x:self.width-1 + self.offscreen_x])
+                self.win.insstr(index, 0, line[self.offscreen_x:self.width-1])
 
             self.stdscr.move(self.screen_y, self.screen_x)
 
@@ -114,7 +114,7 @@ class Editor:
             self.text[self.total_y] = self.text[self.total_y][:self.total_x] + self.text[self.total_y][self.total_x + 1:]
 
     def addch(self, ch):
-        if chr(0) == ch:
+        if chr(0) == ch::
             return
         if len(self.text) == 0:
             self.text.append(ch)
